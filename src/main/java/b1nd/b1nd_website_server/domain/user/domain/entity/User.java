@@ -15,16 +15,20 @@ import org.antlr.v4.runtime.misc.NotNull;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
     @Column(name = "user_id")
-    private Long id;
+    private String id;
 
     @NotNull
+    @Column(name = "user_email")
     private String email;
 
+    @Column(name = "user_name")
     @NotNull
     private String name;
 
+    @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     @NotNull
     private Role role;

@@ -19,7 +19,7 @@ public class UserService {
         Optional<User> byEmail = userRepository.findById(user.getId());
         return byEmail.orElseGet(() -> userRepository.save(user));
     }
-    public User findById(Long userId) {
+    public User findById(String userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
     }

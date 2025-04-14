@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserDto {
-    private Long user_id;
+    private String  user_id;
     private String user_email;
     private String user_name;
     private String user_role;
@@ -19,7 +19,7 @@ public class UserDto {
                 .user_id(user.getId())
                 .user_email(user.getEmail())
                 .user_name(user.getName())
-                .user_role(user.getRole().name()) // ✅ Enum → String 변환
+                .user_role(user.getRole().name())
                 .build();
     }
 
