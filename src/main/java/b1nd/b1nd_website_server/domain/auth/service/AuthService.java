@@ -9,6 +9,7 @@ import b1nd.b1nd_website_server.domain.user.domain.entity.User;
 import b1nd.b1nd_website_server.domain.user.domain.enums.Role;
 import b1nd.b1nd_website_server.domain.user.service.UserService;
 import b1nd.b1nd_website_server.global.libs.webclient.template.DodamWebClientTemplate;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

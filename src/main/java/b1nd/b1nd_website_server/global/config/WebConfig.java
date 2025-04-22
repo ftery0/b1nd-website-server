@@ -14,16 +14,16 @@ public class WebConfig {
 
     private final AuthInterceptor authInterceptor;
 
-//
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedHeaders("*")
-//                .allowedMethods("*")
-//                .allowedOrigins("*");
-//    }
-//
-//
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor((HandlerInterceptor) authInterceptor);
-//    }
+
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedHeaders("*")
+                .allowedMethods("*")
+                .allowedOrigins("*");
+    }
+
+
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor((HandlerInterceptor) authInterceptor);
+    }
 }
