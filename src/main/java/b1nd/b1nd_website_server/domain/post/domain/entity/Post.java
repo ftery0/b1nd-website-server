@@ -1,5 +1,6 @@
 package b1nd.b1nd_website_server.domain.post.domain.entity;
 
+import b1nd.b1nd_website_server.domain.post.domain.enums.PostStatus;
 import b1nd.b1nd_website_server.domain.user.domain.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -38,4 +39,12 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "post_status")
+    private PostStatus status;
+
+    public void setPostStatus(PostStatus postStatus) {
+        this.status = postStatus;
+    }
+
 }

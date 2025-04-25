@@ -1,7 +1,7 @@
 package b1nd.b1nd_website_server.domain.post.presentation.dto;
 
 import b1nd.b1nd_website_server.domain.post.domain.entity.Post;
-import io.swagger.v3.oas.annotations.media.Schema;
+import b1nd.b1nd_website_server.domain.post.domain.enums.PostStatus;
 import lombok.*;
 
 import java.text.SimpleDateFormat;
@@ -16,6 +16,7 @@ public class PostDto {
     private String post_content;
     private String post_author;
     private String post_created_at;
+    private PostStatus post_status;
 
     public static PostDto from(Post post) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -27,6 +28,8 @@ public class PostDto {
                 .post_content(post.getContent())
                 .post_author(post.getUser().getName())
                 .post_created_at(formattedDate)
+                .post_status(post.getStatus())
                 .build();
     }
+
 }

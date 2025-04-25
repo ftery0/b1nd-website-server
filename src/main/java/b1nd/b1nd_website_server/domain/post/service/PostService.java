@@ -1,6 +1,7 @@
 package b1nd.b1nd_website_server.domain.post.service;
 
 import b1nd.b1nd_website_server.domain.post.domain.entity.Post;
+import b1nd.b1nd_website_server.domain.post.domain.enums.PostStatus;
 import b1nd.b1nd_website_server.domain.post.presentation.dto.PostDto;
 import b1nd.b1nd_website_server.domain.post.presentation.dto.request.PageRequest;
 import b1nd.b1nd_website_server.domain.post.presentation.dto.request.PostRequestDto;
@@ -37,7 +38,9 @@ public class PostService {
 
     //블로그 내역 불러오기
     public ResponseData<PostResponse> getPosts(PageRequest pageRequest) {
-        List<Post> allPosts = postRepository.findAll();
+        List<Post> allPosts = postRepository.findAll().stream()
+                .filter(post -> post.getStatus() == PostStatus.ALLOWED)
+                .collect(Collectors.toList());
 
         int totalPage = (int) Math.ceil((double) allPosts.size() / pageRequest.size());
 
@@ -49,6 +52,33 @@ public class PostService {
 
         PostResponse postResponse = new PostResponse(totalPage, pagedPosts);
         return ResponseData.of(HttpStatus.OK, "게시글 조회 성공", postResponse);
+    }
+
+    //대기중인 블로그 불러오기
+    public ResponseData<PostResponse> getPendingPosts(PageRequest pageRequest) {
+        List<Post> pendingPosts = postRepository.findAll().stream()
+                .filter(post -> post.getStatus() == PostStatus.PENDING)
+                .collect(Collectors.toList());
+
+        int totalPage = (int) Math.ceil((double) pendingPosts.size() / pageRequest.size());
+
+        List<PostDto> pagedPosts = pendingPosts.stream()
+                .map(PostDto::from)
+                .skip((pageRequest.page() - 1) * pageRequest.size())
+                .limit(pageRequest.size())
+                .collect(Collectors.toList());
+
+        PostResponse postResponse = new PostResponse(totalPage, pagedPosts);
+        return ResponseData.of(HttpStatus.OK, "대기 중인 게시글 조회 성공", postResponse);
+    }
+
+    //블로그 수락
+    public ResponseData<String> approvePost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        post.setPostStatus(PostStatus.ALLOWED);
+        return ResponseData.of(HttpStatus.OK, "게시글 승인 완료", "게시글 ID: " + postId);
     }
 
 
