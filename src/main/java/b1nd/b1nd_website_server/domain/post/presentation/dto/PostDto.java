@@ -1,6 +1,7 @@
 package b1nd.b1nd_website_server.domain.post.presentation.dto;
 
 import b1nd.b1nd_website_server.domain.post.domain.entity.Post;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.text.SimpleDateFormat;

@@ -17,6 +17,7 @@ public class User {
 
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private String id;
 
@@ -34,7 +35,8 @@ public class User {
     private Role role;
 
     @Builder
-    public User(String email, String name, Role role) {
+    public User(String id, String email, String name, Role role) {
+        this.id = id;
         this.email = email;
         this.name = name;
         this.role = role;

@@ -1,6 +1,7 @@
 package b1nd.b1nd_website_server.domain.post.domain.entity;
 
 import b1nd.b1nd_website_server.domain.user.domain.entity.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -16,6 +17,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class Post {
+    @Schema(example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")

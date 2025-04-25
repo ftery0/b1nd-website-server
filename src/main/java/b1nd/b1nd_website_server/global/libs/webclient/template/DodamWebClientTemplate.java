@@ -25,22 +25,29 @@ public class DodamWebClientTemplate {
 
 
     public String auth(String code, String path) {
-        log.info("[Dodam Auth 요청] code: {}, path: {}", code, path);
+        log.info("Dodam Auth 요청 code: {}, path: {}", code, path);
+        System.out.println(authProperties.getClientId());
+        System.out.println(authProperties.getClientSecret());
+        try {
+            TokenRes tokenRes = webClientUtil.post(
+                    DODAM_AUTH.getEndpoint() + path,
+                    DAuthToken.builder()
+                            .code(code)
+                            .client_id(authProperties.getClientId())
+                            .client_secret(authProperties.getClientSecret()).build(),
+                    TokenRes.class
+            ).getBody();
 
-        TokenRes tokenRes = webClientUtil.post(
-                DODAM_AUTH.getEndpoint() + path,
-                DAuthToken.builder()
-                        .code(code)
-                        .client_id(authProperties.getClientId())
-                        .client_secret(authProperties.getClientSecret()).build(),
-                TokenRes.class
-        ).getBody();
+            String accessToken = tokenRes.getAccessToken();
+            log.info("Dodam Auth 응답 accessToken: {}", accessToken);
+            return accessToken;
 
-        String accessToken = tokenRes.getAccessToken();
-        log.info("[Dodam Auth 응답] accessToken: {}", accessToken);
-
-        return accessToken;
+        } catch (Exception e) {
+            log.error("Dodam Auth 실패 code: {}, path: {}, error: {}", code, path, e.getMessage(), e);
+            throw e;
+        }
     }
+
 
     public OpenApiDto openApi(String accessToken, String path) {
         return webClientUtil.get(
