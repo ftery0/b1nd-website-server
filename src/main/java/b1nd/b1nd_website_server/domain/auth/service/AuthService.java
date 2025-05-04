@@ -70,7 +70,6 @@ public class AuthService {
 
 
         User user = userService.save(User.builder()
-                .id(infoDto.getDodamId())
                 .email(infoDto.getEmail())
                 .name(infoDto.getName())
                 .role(Role.STUDENT)

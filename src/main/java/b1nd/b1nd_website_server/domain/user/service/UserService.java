@@ -20,11 +20,11 @@ public class UserService {
 
     @Transactional
     public User save(User user) {
-        log.info("Saving user: {}", user.getId());
-        Optional<User> byEmail = userRepository.findById(user.getId());
-        return byEmail.orElseGet(() -> userRepository.save(user));
+        log.info("Saving user by email: {}", user.getEmail());
+        return userRepository.findByEmail(user.getEmail())
+                .orElseGet(() -> userRepository.save(user));
     }
-    public User findById(String userId) {
+    public User findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
     }

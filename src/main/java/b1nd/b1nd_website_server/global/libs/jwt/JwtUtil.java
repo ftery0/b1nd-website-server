@@ -70,6 +70,7 @@ public class JwtUtil {
     }
 
     public User getUserByToken(String token) {
-        return userService.findById(extractAllClaims(token).getSubject());
+        Long userId = Long.valueOf(extractAllClaims(token).getSubject());
+        return userService.findById(userId);
     }
 }

@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserDto {
-    private String  user_id;
+    private long  user_id;
     private String user_email;
     private String user_name;
     private String user_role;

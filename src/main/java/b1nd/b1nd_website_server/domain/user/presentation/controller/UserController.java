@@ -25,7 +25,7 @@ public class UserController {
     @Operation(summary = "my information", description = "자신의 정보 가져오기")
     @AuthCheck
     @GetMapping("/my")
-    public ResponseData<UserDto> getUser(@RequestAttribute("userId") String userId) {
+    public ResponseData<UserDto> getUser(@RequestAttribute("userId") Long userId) {
         User user = userService.findById(userId);
         UserDto userInfo = UserDto.from(user);
         return ResponseData.of(HttpStatus.OK, "자신의 정보 가져오기 성공", userInfo);
