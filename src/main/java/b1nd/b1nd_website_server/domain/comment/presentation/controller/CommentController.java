@@ -24,11 +24,13 @@ public class CommentController {
         return commentService.createComment(request,postId);
     }
 
+    @Operation(summary = "comment list", description = "댓글 불러오기")
     @GetMapping("/{postId}")
     public ResponseData<?> getComments(@PathVariable Long postId) {
         return commentService.getCommentsByPostId(postId);
     }
 
+    @Operation(summary = "delete comment", description = "댓글 삭제(어드민만 가능)")
     @DeleteMapping("/{commentId}")
     public ResponseData<String> deleteComment(
             @PathVariable Long commentId,
