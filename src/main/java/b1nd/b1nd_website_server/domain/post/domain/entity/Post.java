@@ -1,5 +1,6 @@
 package b1nd.b1nd_website_server.domain.post.domain.entity;
 
+import b1nd.b1nd_website_server.domain.comment.domain.entity.Comment;
 import b1nd.b1nd_website_server.domain.post.domain.enums.PostStatus;
 import b1nd.b1nd_website_server.domain.user.domain.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,7 +10,9 @@ import jakarta.persistence.Id;
 import lombok.*;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -42,6 +45,10 @@ public class Post {
 
     @Column(name = "post_status")
     private PostStatus status;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
 
     public void setPostStatus(PostStatus postStatus) {
         this.status = postStatus;

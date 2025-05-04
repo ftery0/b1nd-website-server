@@ -37,7 +37,7 @@ public class PostController {
         return postService.getPosts(pageRequest);
     }
 
-    @Operation(summary = "대기 중인 블로그 목록", description = "PENDING 상태의 게시글 조회")
+    @Operation(summary = "대기 중인 블로그 목록", description = "PENDING 상태의 블로그 조회")
     @GetMapping("/list/pending")
     public ResponseData<PostResponse> getPendingPosts(
             @RequestParam(name = "page", defaultValue = "1") long page,
@@ -50,6 +50,12 @@ public class PostController {
     @PatchMapping("/approve/{id}")
     public ResponseData<String> approvePost(@PathVariable Long id) {
         return postService.approvePost(id);
+    }
+
+    @Operation(summary = "블로그 상세페이지", description = "블로그 상세 확인 api")
+    @GetMapping("/{id}")
+    public ResponseData<PostDto> getPostDetail(@PathVariable("id") Long id) {
+        return postService.getPostDetail(id);
     }
 
 }

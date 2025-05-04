@@ -81,5 +81,15 @@ public class PostService {
         return ResponseData.of(HttpStatus.OK, "게시글 승인 완료", "게시글 ID: " + postId);
     }
 
+    // 블로그 상세 조회
+    public ResponseData<PostDto> getPostDetail(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        PostDto postDto = PostDto.from(post);
+
+        return ResponseData.of(HttpStatus.OK, "게시글 상세 조회 성공", postDto);
+    }
+
 
 }
