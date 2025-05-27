@@ -27,7 +27,6 @@ public class PostService {
         Post post = Post.builder()
                 .title(postDtoRequestDto.getPost_title())
                 .content(postDtoRequestDto.getPost_content())
-                .author(postDtoRequestDto.getPost_author())
                 .createdAt(new Date())
                 .user(null)
                 .build();
@@ -90,6 +89,9 @@ public class PostService {
 
         return ResponseData.of(HttpStatus.OK, "게시글 상세 조회 성공", postDto);
     }
-
+    public Post getPostById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+    }
 
 }

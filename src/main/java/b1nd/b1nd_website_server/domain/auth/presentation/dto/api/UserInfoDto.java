@@ -11,5 +11,4 @@ public class UserInfoDto {
     private String name;
     private String profileImage;
     private String email;
-    private String dodamId;
 }
