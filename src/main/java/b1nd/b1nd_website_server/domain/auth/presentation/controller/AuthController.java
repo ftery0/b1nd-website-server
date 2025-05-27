@@ -31,7 +31,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseData<TokenDto> login(@RequestBody @Valid LoginDto loginDto) {
         TokenDto tokenDto = authService.getToken(loginDto);
-        return ResponseData.of(HttpStatus.OK, "login성공", tokenDto);
+        return ResponseData.of(HttpStatus.OK, "로그인 성공", tokenDto);
     }
     @Operation(summary = "refresh", description = "토큰 Refresh")
     @PostMapping(value = "/refresh")
