@@ -37,7 +37,7 @@ public class CommentController {
             @RequestHeader("Authorization") String accessToken
     ) {
         if (accessToken.startsWith("Bearer ")) {
-            accessToken = accessToken.substring(7);
+            accessToken = accessToken.substring(7).trim();
         }
         return commentService.deleteComment(commentId, accessToken);
     }

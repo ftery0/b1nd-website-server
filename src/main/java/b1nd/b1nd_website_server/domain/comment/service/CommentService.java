@@ -2,6 +2,8 @@ package b1nd.b1nd_website_server.domain.comment.service;
 
 import b1nd.b1nd_website_server.domain.comment.domain.entity.Comment;
 import b1nd.b1nd_website_server.domain.comment.presentation.dto.request.CreateCommentRequest;
+import b1nd.b1nd_website_server.domain.comment.presentation.dto.response.CommentDto;
+import b1nd.b1nd_website_server.domain.comment.presentation.dto.response.CommentListResponse;
 import b1nd.b1nd_website_server.domain.comment.repository.CommentRepository;
 import b1nd.b1nd_website_server.domain.post.domain.entity.Post;
 import b1nd.b1nd_website_server.domain.post.repository.PostRepository;
@@ -40,12 +42,15 @@ public class CommentService {
     }
 
     //댓글조회
-    public ResponseData<List<Comment>> getCommentsByPostId(Long postId) {
+    public ResponseData<CommentListResponse> getCommentsByPostId(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
 
-        List<Comment> comments = commentRepository.findByPost(post);
-        return ResponseData.of(HttpStatus.OK, "댓글 조회 성공", comments);
+        List<CommentDto> commentDtos = commentRepository.findByPost(post).stream()
+                .map(CommentDto::from)
+                .toList();
+
+        return ResponseData.of(HttpStatus.OK, "댓글 조회 성공", CommentListResponse.of(commentDtos));
     }
 
     //댓글 삭제 (권한:어드민)
