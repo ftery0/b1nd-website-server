@@ -8,8 +8,13 @@ import b1nd.b1nd_website_server.domain.post.presentation.dto.request.PostRequest
 import b1nd.b1nd_website_server.domain.post.presentation.dto.response.PostResponse;
 import b1nd.b1nd_website_server.domain.post.repository.PostRepository;
 
+import b1nd.b1nd_website_server.domain.user.domain.entity.User;
+import b1nd.b1nd_website_server.global.libs.jwt.JwtUtil;
+import b1nd.b1nd_website_server.global.libs.webclient.template.DodamWebClientTemplate;
 import b1nd.b1nd_website_server.global.response.ResponseData;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -17,22 +22,41 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final JwtUtil jwtUtil;
+    private static final Logger log = LoggerFactory.getLogger(PostService.class);
 
 
-    public ResponseData<Long> createPost(PostRequestDto postDtoRequestDto) {
+    public ResponseData<Long> createPost(PostRequestDto postDtoRequestDto, String token) {
+        log.info("Received token: {}", token);
+        log.info("PostRequestDto: title={}, content={}", postDtoRequestDto.getPost_title(), postDtoRequestDto.getPost_content());
+
+        User user = jwtUtil.getUserByToken(token);
+
+        if (user == null) {
+            log.error("User not found from token!");
+            throw new IllegalArgumentException("유효하지 않은 사용자입니다.");
+        }
+
+        log.info("User info: id={}, email={}", user.getId(), user.getEmail());
+
         Post post = Post.builder()
                 .title(postDtoRequestDto.getPost_title())
                 .content(postDtoRequestDto.getPost_content())
                 .createdAt(new Date())
-                .user(null)
+                .user(user)
+                .status(PostStatus.PENDING)
                 .build();
-        Post savedPost = postRepository.save(post);
-        return ResponseData.of(HttpStatus.CREATED, "게시글 생성 성공", savedPost.getId());
 
+        Post savedPost = postRepository.save(post);
+        log.info("Post saved with ID: {}", savedPost.getId());
+
+        return ResponseData.of(HttpStatus.CREATED, "게시글 생성 성공", savedPost.getId());
     }
 
     //블로그 내역 불러오기

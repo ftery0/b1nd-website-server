@@ -5,11 +5,14 @@ import b1nd.b1nd_website_server.domain.post.presentation.dto.request.PostRequest
 import b1nd.b1nd_website_server.domain.post.presentation.dto.response.PostResponse;
 import b1nd.b1nd_website_server.domain.post.presentation.dto.request.PageRequest;
 import b1nd.b1nd_website_server.domain.post.service.PostService;
+import b1nd.b1nd_website_server.domain.user.domain.enums.Role;
 import b1nd.b1nd_website_server.global.annotation.AuthCheck;
 import b1nd.b1nd_website_server.global.response.ResponseData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Post", description = "Post Api")
@@ -18,12 +21,19 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private static final Logger log = LoggerFactory.getLogger(PostController.class);
 
     @Operation(summary = "write Blog", description = "블로그 생성")
     @PostMapping
-    @AuthCheck
-    public ResponseData<Long> createPost(@RequestBody PostRequestDto postRequestDto) {
-        return postService.createPost(postRequestDto);
+    @AuthCheck(roles = {Role.ADMIN,Role.STUDENT})
+    public ResponseData<Long> createPost(@RequestBody PostRequestDto postRequestDto,
+                                         @RequestHeader("Authorization") String token) {
+        log.info("Received token: {}", token);
+
+        String parsedToken = token.replace("Bearer", "").trim();
+        log.info("Parsed token: {}", parsedToken);
+
+        return postService.createPost(postRequestDto, parsedToken);
     }
 
     @Operation(summary = "blog List", description = "블로그 불러오기")

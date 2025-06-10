@@ -12,14 +12,15 @@ import org.springframework.stereotype.Service;
 public class TokenService {
     private final JwtUtil jwtUtil;
 
-    private static final Long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 3600 * 24 * 3; // 24시간
-    private static final Long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 3600 * 24 * 3 * 60; // 3일
+    private static final Long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 3600 * 24 * 3L; // 3일
+    private static final Long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 3600 * 24 * 3 * 60L; // 180일
 
-    public String generateAccessToken(String email, @NotNull Role role) {
-        return jwtUtil.generateToken(email, ACCESS_TOKEN_EXPIRE_TIME, JwtType.ACCESS, role);
-    };
+    public String generateAccessToken(Long userId, String email, @NotNull Role role) {
+        return jwtUtil.generateToken(userId, email, ACCESS_TOKEN_EXPIRE_TIME, JwtType.ACCESS, role);
+    }
 
-    public String generateRefreshToken(String email, @NotNull Role role) {
-        return jwtUtil.generateToken(email, REFRESH_TOKEN_EXPIRE_TIME, JwtType.REFRESH, role);
-    };
+    public String generateRefreshToken(Long userId, String email, @NotNull Role role) {
+        return jwtUtil.generateToken(userId, email, REFRESH_TOKEN_EXPIRE_TIME, JwtType.REFRESH, role);
+    }
 }
+
