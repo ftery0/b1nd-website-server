@@ -35,23 +35,25 @@ public class AuthService {
                 .name(infoDto.getName())
                 .role(Role.STUDENT)
                 .build());
-        return createUserToken(user.getEmail(), user.getRole());
+        return createUserToken(user.getId(), user.getEmail(), user.getRole());
+
     }
 
-    private TokenDto createUserToken(String email, @NotNull Role role) {
-        TokenDto tokenDto = TokenDto.builder()
-                .accessToken(tokenService.generateAccessToken(email, role))
-                .refreshToken(tokenService.generateRefreshToken(email, role))
+    private TokenDto createUserToken(Long userId, String email, @NotNull Role role) {
+        return TokenDto.builder()
+                .accessToken(tokenService.generateAccessToken(userId, email, role))
+                .refreshToken(tokenService.generateRefreshToken(userId, email, role))
                 .build();
-
-        return tokenDto;
     }
+
 
     public ReProvideToken reProvideToken(String email, @NotNull Role role) {
-        String accessToken = tokenService.generateAccessToken(email, role);
+        User user = userService.findByEmail(email); // 또는 적절한 조회 메서드 사용
+        String accessToken = tokenService.generateAccessToken(user.getId(), email, role);
         return ReProvideToken.builder()
                 .accessToken(accessToken)
                 .build();
     }
+
 
 }
