@@ -62,6 +62,14 @@ public class PostController {
         return postService.approvePost(id);
     }
 
+    //애들아 나중에 이거 이메일로 "거절 돼었습니다 + 사유" 메시지 전송해주는 기능 있으면 좋을거 같아
+    //거절이지만 삭제하는 느낌스..
+    @Operation(summary = "blog reject", description = "게시글 삭제")
+    @PatchMapping("/reject/{id}")
+    public ResponseData<String> rejectPost(@PathVariable Long id) {
+        return postService.rejectPost(id);
+    }
+
     @Operation(summary = "blog detail page", description = "블로그 상세 확인 api")
     @GetMapping("/{id}")
     public ResponseData<PostDto> getPostDetail(@PathVariable("id") Long id) {

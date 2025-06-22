@@ -12,6 +12,7 @@ import b1nd.b1nd_website_server.domain.user.domain.entity.User;
 import b1nd.b1nd_website_server.global.libs.jwt.JwtUtil;
 import b1nd.b1nd_website_server.global.libs.webclient.template.DodamWebClientTemplate;
 import b1nd.b1nd_website_server.global.response.ResponseData;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,10 +49,13 @@ public class PostService {
         Post post = Post.builder()
                 .title(postDtoRequestDto.getPost_title())
                 .content(postDtoRequestDto.getPost_content())
+                .summary(postDtoRequestDto.getPost_summary())
+                .posterImage(postDtoRequestDto.getPoster_image())
                 .createdAt(new Date())
                 .user(user)
                 .status(PostStatus.PENDING)
                 .build();
+
 
         Post savedPost = postRepository.save(post);
         log.info("Post saved with ID: {}", savedPost.getId());
@@ -96,12 +100,26 @@ public class PostService {
     }
 
     //블로그 수락
+    @Transactional
     public ResponseData<String> approvePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
 
         post.setPostStatus(PostStatus.ALLOWED);
+        postRepository.save(post);
+
         return ResponseData.of(HttpStatus.OK, "게시글 승인 완료", "게시글 ID: " + postId);
+    }
+
+    //블로그 거절
+    @Transactional
+    public ResponseData<String> rejectPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        postRepository.delete(post);
+
+        return ResponseData.of(HttpStatus.OK, "게시글 삭제 완료", "삭제된 게시글 ID: " + postId);
     }
 
     // 블로그 상세 조회

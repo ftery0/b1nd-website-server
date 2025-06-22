@@ -17,6 +17,8 @@ public class PostDto {
     private String post_author;
     private String post_created_at;
     private PostStatus post_status;
+    private String poster_image;
+    private String post_summary;
 
     public static PostDto from(Post post) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -29,6 +31,9 @@ public class PostDto {
                 .post_author(post.getUser().getName())
                 .post_created_at(formattedDate)
                 .post_status(post.getStatus())
+                .poster_image(post.getPosterImage())
+                .post_summary(post.getSummary())
+
                 .build();
     }
 

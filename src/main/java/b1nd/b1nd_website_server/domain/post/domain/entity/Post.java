@@ -40,6 +40,12 @@ public class Post {
     @Column(name = "post_created_at")
     private Date createdAt;
 
+    @Column(name = "poster_image")
+    private String posterImage;
+
+    @Column(name = "post_summary")
+    private String summary;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
