@@ -30,6 +30,7 @@ public class CommentController {
         return commentService.getCommentsByPostId(postId);
     }
 
+
     @Operation(summary = "delete comment", description = "댓글 삭제(어드민만 가능)")
     @DeleteMapping("/{commentId}")
     public ResponseData<String> deleteComment(

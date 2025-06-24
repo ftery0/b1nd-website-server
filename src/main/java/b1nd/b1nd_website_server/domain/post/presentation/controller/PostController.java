@@ -76,4 +76,15 @@ public class PostController {
         return postService.getPostDetail(id);
     }
 
+    @Operation(summary = "blog delete", description = "게시글 및 해당 댓글 삭제")
+    @DeleteMapping("/{id}")
+    @AuthCheck(roles = {Role.ADMIN})
+    public ResponseData<String> deletePost(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String token
+    ) {
+        String parsedToken = token.replace("Bearer", "").trim();
+        return postService.deletePost(id, parsedToken);
+    }
+
 }

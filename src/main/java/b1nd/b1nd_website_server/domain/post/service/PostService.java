@@ -1,5 +1,6 @@
 package b1nd.b1nd_website_server.domain.post.service;
 
+import b1nd.b1nd_website_server.domain.comment.service.CommentService;
 import b1nd.b1nd_website_server.domain.post.domain.entity.Post;
 import b1nd.b1nd_website_server.domain.post.domain.enums.PostStatus;
 import b1nd.b1nd_website_server.domain.post.presentation.dto.PostDto;
@@ -9,6 +10,7 @@ import b1nd.b1nd_website_server.domain.post.presentation.dto.response.PostRespon
 import b1nd.b1nd_website_server.domain.post.repository.PostRepository;
 
 import b1nd.b1nd_website_server.domain.user.domain.entity.User;
+import b1nd.b1nd_website_server.domain.user.domain.enums.Role;
 import b1nd.b1nd_website_server.global.libs.jwt.JwtUtil;
 import b1nd.b1nd_website_server.global.libs.webclient.template.DodamWebClientTemplate;
 import b1nd.b1nd_website_server.global.response.ResponseData;
@@ -31,7 +33,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final JwtUtil jwtUtil;
     private static final Logger log = LoggerFactory.getLogger(PostService.class);
-
+    private final CommentService commentService;
 
     public ResponseData<Long> createPost(PostRequestDto postDtoRequestDto, String token) {
         log.info("Received token: {}", token);
@@ -100,7 +102,6 @@ public class PostService {
     }
 
     //블로그 수락
-    @Transactional
     public ResponseData<String> approvePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
@@ -134,6 +135,23 @@ public class PostService {
     public Post getPostById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+    }
+
+
+    public ResponseData<String> deletePost(Long postId, String token) {
+        User user = jwtUtil.getUserByToken(token);
+
+        if (user == null || user.getRole() != Role.ADMIN) {
+            return ResponseData.of(HttpStatus.FORBIDDEN, "관리자만 게시글을 삭제할 수 있습니다.", null);
+        }
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        commentService.deleteCommentsByPost(post, user);
+        postRepository.delete(post);
+
+        return ResponseData.of(HttpStatus.OK, "게시글 삭제 및 관련 댓글 삭제 성공", "게시글 ID: " + postId);
     }
 
 }

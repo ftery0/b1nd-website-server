@@ -68,4 +68,13 @@ public class CommentService {
         return ResponseData.of(HttpStatus.OK, "댓글 삭제 성공", "댓글 ID: " + commentId);
     }
 
+
+    public void deleteCommentsByPost(Post post, User user) {
+        if (user.getRole() != Role.ADMIN) {
+            throw new IllegalArgumentException("관리자만 댓글을 삭제할 수 있습니다.");
+        }
+
+        List<Comment> comments = commentRepository.findByPost(post);
+        commentRepository.deleteAll(comments);
+    }
 }
